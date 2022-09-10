@@ -1,6 +1,14 @@
+#http://blog.espol.edu.ec/telg1001/audio-en-formato-wav/ #obtener datos de un audio 
+#https://joserzapata.github.io/courses/mineria-audio/representacion_audio/ #Representación en Frecuencia
+#https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.html #graficar normal
+#https://www.geeksforgeeks.org/how-to-update-a-plot-on-same-figure-during-the-loop/ #graficar en loop
+#https://code.tutsplus.com/es/tutorials/compressing-and-extracting-files-in-python--cms-26816 #comprimir archivos
+#https://www.thepythoncode.com/article/play-and-record-audio-sound-in-python  #Grabar y guardar
+
 #Parte 1
 from multiprocessing import Process
 from matplotlib.widgets import Button
+from os import remove
 import multiprocessing
 import time
 import wave
@@ -13,6 +21,11 @@ import scipy.fft
 from scipy.fftpack import fft
 import scipy.io.wavfile as waves
 import matplotlib.pyplot as plt
+
+#Parte 4
+import os
+import zipfile
+import pathlib
 
 #Para lograr ejecutar el programa necesita los siguientes módulos 
 # pyaudio 0.2.12
@@ -90,7 +103,6 @@ def grabar2(q1,q2,q3,q4):
 
     if q1.empty()==False:
         time.sleep(2)
-    q1.put(sonido)
     
     #Guarda los frames del dominio del tiempo en un archivo
     f = open ('dominio_tiempo.txt','wb')
@@ -261,7 +273,7 @@ def grafica_tiempo_real(q1,q2,q3,q4):
     #Termina el proceso 3
 
 
-#Ingrabar_graficar
+#Grabar_graficar
 #Método que inicializa los 3 procesos 
 def grabar_graficar():
     multiprocessing.freeze_support()
@@ -298,12 +310,14 @@ def grabar_graficar():
     for i in procesos:
         i.close()
 
+    archivo = get_nombre_atm(0)
+    comprimir("",archivo) #Comprime y elimina los archivos
 
 ##########################################################################################
 
 #### PARTE 2 DEL PROGRAMA - GRABACIÓN Y GRÁFICAS DE UN ARCHIVO YA EXISTENTE  #############
 
-#########################################################################################
+##########################################################################################
 
 #audio_bash
 #Método que recibe el nombre de un archivo.wav y realiza las gráficas en el dominio del tiempo y la frecuencia
@@ -314,7 +328,7 @@ def audio_bash():
         #Lee los datos del archivo y los guarda en sonido
         archivo = audio + '.wav'
         fsonido, sonido = waves.read(archivo)         
-        MagFreq=graficas_parte_2(sonido) #Realiza las graficas
+        MagFreq=graficas_parte_2(0,[sonido]) #Realiza las gráficas
         
         #Guarda los datos del dominio del tiempo en un archivo
         frames = sonido[:,0].copy().tobytes()
@@ -328,9 +342,15 @@ def audio_bash():
         f.write(frecuencias)
         f.close()
 
+        nombre =get_nombre_atm(0)
+        comprimir(archivo,nombre)
+
+
     except:
         print("Ocurrió un error al abrir el archivo")
 
+#get_nombre_audio
+#método para obtener el nombre del archivo de audio existente solicitando al usuario
 def get_nombre_audio():
     #Recibe el nombre del archivo
     while True:
@@ -345,41 +365,102 @@ def get_nombre_audio():
 
         else:
             break
-    return audio
+    return audio #devuelve el nombre del audio
 
-def graficas_parte_2(sonido):
-    izquierdo = sonido[:,0].copy() #Copia solo un canal del audio
-    # SALIDA gráfica del dominio en el tiempo
-    plt.rcParams['figure.figsize'] = (15, 5)
-    plt.subplot(211)
-    plt.plot(izquierdo)
-    #plt.ylabel('Magnitud'); plt.title('1- Dominio del tiempo || 2- FFT total');
-    
-#-------------------------------------------------
-    # SALIDA gráfica del espectro del frecuencia FFT
-    #Este fragmento de código fue obtenido de Joser Zapata
-    izquierdo = izquierdo / (2.**15)
-    n = len(izquierdo) 
-    AudioFreq = fft(izquierdo) # Calcular la transformada de Fourier
-    # La salida de la FFT es un array de numeros complejos
-    # los numeros complejos se representan en Magnitud y fase
-    MagFreq = np.abs(AudioFreq) # Valor absoluto para obtener la magnitud
 
-    # Escalar por el numero de puntos para evitar que los valores de magnitud
-    # dependan del tamaño de la señal o de su frecuencia de muestreo
-    MagFreq = MagFreq / float(n)
-    plt.subplot(212)
-    plt.plot(MagFreq) #Espectro de magnitud
-    #plt.ylabel('Magnitud'); plt.title('FFT total');
 
-    plt.show()
+######################################################################
 
-    return MagFreq
+#### PARTE 3 DEL PROGRAMA - MUESTRA DE LOS ARCHIVOS ATM  #############
 
-def comprimir(nombre):
+######################################################################
+def muestras_atm():
     try:
-        audio= "recorded.wav"
-        autrum = zipfile.ZipFile('archivo.atm', 'w')
+        archivo = get_nombre_atm(1)
+        archivo = archivo
+        descomprimir(archivo)
+
+        f = open('dominio_tiempo.txt', 'rb')
+        frames = f.read()
+        f.close()
+        sonido= np.frombuffer(frames, dtype=np.int16)
+
+
+        f = open('dominio_frecuencia.txt', 'rb')
+        frames = f.read()
+        f.close()
+        
+        MagFreq= np.frombuffer(frames, dtype=np.float64)
+
+        print("bandera1")
+        graficas_parte_2(1,[sonido,MagFreq])
+        print("bandera2")
+        remove("dominio_frecuencia.txt")
+        remove("dominio_tiempo.txt")
+    except:
+        print("Problemas con abrir archivos")
+
+#get_nombre_atm
+#método para obtener el nombre del archivo atm  solicitando al usuario
+def get_nombre_atm(tipo):
+    if tipo == 1:
+
+        while True:
+            audio = input("Escriba el nombre del archivo atm para abrir, sin la extension:  ")
+            if (audio.find('.atm'))!=-1:
+                print ("No puede tener la extension")
+                pass
+
+            elif (audio.find('.zip'))!=-1:
+                print ("Solo debe ser archivo atm")
+                pass
+
+            else:
+                break
+        return audio+".atm"
+    else:
+        ruta= pathlib.Path(__file__).parent.absolute()
+        valido = True
+        while True:
+            audio = input("Escriba el nombre del archivo atm a guardar, sin la extension:  ")
+            archivos =os.listdir(ruta)
+
+            for i in archivos:
+                if i==audio+".atm":
+                    print("entra")
+                    valido= False
+
+            if (audio.find('.atm'))!=-1:
+                print ("No puede tener la extension")
+                pass
+
+            elif (audio.find('.zip'))!=-1:
+                print ("Solo debe ser archivo atm")
+
+                pass
+            
+            elif valido== False:
+                print ("Ya existe un archivo atm con este nombre")
+                valido=True
+                pass
+
+            else:
+                break
+        return audio+".atm"
+
+#####################################################
+
+#### COMPRIMIR Y DESCOMPRIMIR ARCHIVOS  #############
+
+#####################################################
+def comprimir(audio,nombre):
+    try:
+        bandera = False
+        if audio == "":
+            audio= "recorded.wav"
+            bandera = True
+
+        autrum = zipfile.ZipFile(nombre, 'w')
         ruta= pathlib.Path(__file__).parent.absolute()
     
         autrum.write(os.path.join(ruta, "dominio_frecuencia.txt"), os.path.relpath(os.path.join(ruta,"dominio_frecuencia.txt"), ruta), compress_type = zipfile.ZIP_DEFLATED)
@@ -390,40 +471,105 @@ def comprimir(nombre):
 
         remove("dominio_frecuencia.txt")
         remove("dominio_tiempo.txt")
-        remove("recorded.wav")
+        if (bandera==True):
+            remove("recorded.wav")
     except:
         print("Hubo problemas al comprimir los archivos en un .atm")
 
 def descomprimir(nombre):
     try:
         ruta= pathlib.Path(__file__).parent.absolute()
-        autrum = zipfile.ZipFile(str(ruta)+"//archivo.atm")
+        autrum = zipfile.ZipFile(str(ruta)+"//"+nombre)
         autrum.extractall(ruta)
         
         autrum.close()
     except:
         print("No existe este archivo .atm")
+    
+def graficas_parte_2(tipo,datos):
+    
+    sonido = datos[0]
+    plt.rcParams['figure.figsize'] = (15, 5)
+#-------------------------------------------------
+    if tipo == 0: #Si es un gráfica desde un archivo ya existente
+        izquierdo = sonido[:,0].copy() #Copia solo un canal del audio
+        # SALIDA gráfica del dominio en el tiempo
+        plt.subplot(211)
+        plt.plot(izquierdo)
+
+        #plt.ylabel('Magnitud'); plt.title('1- Dominio del tiempo || 2- FFT total');
+        # SALIDA gráfica del espectro del frecuencia FFT
+        #Este fragmento de código fue obtenido de Joser Zapata
+        izquierdo = izquierdo / (2.**15)
+        n = len(izquierdo) 
+        AudioFreq = fft(izquierdo) # Calcular la transformada de Fourier
+        # La salida de la FFT es un array de numeros complejos
+        # los numeros complejos se representan en Magnitud y fase
+        MagFreq = np.abs(AudioFreq) # Valor absoluto para obtener la magnitud
+
+        # Escalar por el numero de puntos para evitar que los valores de magnitud
+        # dependan del tamaño de la señal o de su frecuencia de muestreo
+        MagFreq = MagFreq / float(n)
+        plt.subplot(212)
+        plt.plot(MagFreq) #Espectro de magnitud
+        #plt.ylabel('Magnitud'); plt.title('FFT total');
+
+        plt.show()
+
+        return MagFreq
+    else: #Si es un gráfica desde un archivo.atm
+        # SALIDA gráfica del dominio en el tiempo
+        
+        plt.subplot(211)
+        plt.plot(sonido)
+
+        MagFreq = datos[1]
+        plt.subplot(212)
+        plt.plot(MagFreq) #Espectro de magnitud
+        #plt.ylabel('Magnitud'); plt.title('FFT total');
+
+        
+        plt.show()
+        
+        return True
+
+
+#####################################################
+
+############## MAIN DEL PROGRAMA  ###################
+
+#####################################################
 
 if __name__ == '__main__':
     
     while True:
         print("\n ")
         print("1. Para grabar inserte 1")
-        print("2. Para usar un archivo ya creado inserte 2")
-        print("3. Para ver el archivo Autrum reciente mente guardado inserte 3")
-        print("4. Para salir inserte 4")
+        print("2. Para ver el archivo Autrum inserte 2")
+        print("3. Para usar un archivo de audio existente inserte 3")
+        print("4. Para descomprimir un Autrum 4")
+        print("5. Para salir inserte 5")
         x= input("Inserte la opción que desee: ")
+        print("\n ")
         if x == "1":
-            print("\n ")
             grabar_graficar() #Inicializa los multiples procesos
-            comprimir() #Comprime y elimina los archivos
             print("Se ha grabado con éxito")
         
         elif x== "2":
-            print("\n ")
+            muestras_atm()
+
+
+        elif x== "3":
             audio_bash()
+
+        elif x=="4":
+            try:
+                archivo = get_nombre_atm(1)
+                descomprimir(archivo)
+            except:
+                print("No se puede descomprimir el archivo")
         
-        elif x== "4":
+        elif x== "5":
             break
 
         else:
