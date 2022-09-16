@@ -11,13 +11,15 @@ IC: 7602-Redes - 2 Semestre 2022.
 
 ## Índice
 
-- Funcionamiento de grabar audio y hacer las gráficas a la vez.
-- Funcionamiento de analizar un audio existente.
-- Funcionamiento de usar los archivos Autrum creados.
-- Manual de usuario
-- Referencias
+- A. Funcionamiento de grabar audio y hacer las gráficas a la vez.
+- B. Funcionamiento de analizar un audio existente.
+- C. Funcionamiento de usar los archivos Autrum creados.
+- D. Manual de usuario
+- E. Pruebas Unitarias
+- F. Módulos 
+- G. Referencias
 
-## Funcionamiento de grabar audio y hacer las gráficas a la vez.
+## A) Funcionamiento de grabar audio y hacer las gráficas a la vez.
 
 El programa utiliza multi procesos ya que el modulo **"matplotlib"** no permite el uso de hilos.
 
@@ -45,7 +47,7 @@ La parte que se utiliza aquí es para realizar el análisis de Fourier al sonido
 - La segunda parte está basada en un código de Geeksforgeeks y modificada por Jocxan Sandí:
 La parte que se utiliza aquí es para realizar la gráfica del dominio en el tiempo y la frecuencia de forma cíclica, ya que el proceso envía los datos cada 3 segundos, entonces se actualiza cada 3 segundos.
 
-## Funcionamiento de analizar un audio existente.
+## B) Funcionamiento de analizar un audio existente.
 
 Se inicia enel método **audio_bash**.
 Método que recibe el nombre de un archivo ".wav" y realiza las gráficas en el dominio del tiempo y la frecuencia. También utiliza la base del código de Joser Zapata.
@@ -56,13 +58,13 @@ Método que recibe el nombre de un archivo ".wav" y realiza las gráficas en el 
 4. Escribe los archivos donde se guardan los datos del dominio del tiempo y la frecuencia.
 5. Comprime los archivos en un archivo Autrum.
 
-## Funcionamiento de usar los archivos Autrum creados.
+## C) Funcionamiento de usar los archivos Autrum creados.
 
 1. Solicita el nombre del archivo al usuario y los descomprime.
 2. Lee los datos de los archivos del dominio del tiempo y la frecuencia.
 3. Hace las gráficas con el método **graficas_parte_2**.
 
-## Manual de usuario.
+## D) Manual de usuario.
 
 **Llamada: py tarea1.py**
 
@@ -94,7 +96,7 @@ A continuación el sistema hace otra solicitud, en este caso el nombre del archi
 - **Escriba el nombre del audio sin la extension:**
 
 - Al escribir el nombre y presionar Enter, el programa abre una ventada donde se muestran las gráficas.
-- **Escriba el nombre del archivo atm a guardar, sin la extension:**. Esto es para guardar los datos en un archivo Autrum.
+- **Escriba el nombre del archivo atm a guardar, sin la extension:** Esto es para guardar los datos en un archivo Autrum.
 - Al cerrar la ventana se termina el programa y vuelve al menu principal.
 
 ### 4. Para descomprimir un Autrum 4
@@ -105,10 +107,35 @@ A continuación el sistema hace otra solicitud, en este caso el nombre del archi
 
 ### 5. Para salir inserte 5
 
--Finaliza el programa
+- Finaliza el programa
 
+## E) Pruebas Unitarias 
+### Tabla de decisiones.
 
-## Referencias 
+| Condiciones                | R1 | R2 | R3 | R4 |R5 | R6                  |
+|----------------------------|----|----|----|----|---|---------------------|
+| Inserte la opción que desee| 1  | 2  | 3  | 4  | 5 | Cualquier otra cosa |
+||||||||
+| Acciones     |     |       |  |  |  |
+| Grabar y gráficas          | x    |   |  |  |  |  |
+| Ver un archivo Autrum      |     | x  |  |  |  |  |
+| Usar archivo wav existente |     |   | x |  |  |  |
+| Descomprimir un Autrum     |     |   |  | x |  |  |
+| Salir                      |     |   |  |  | x |  |
+| Volver a imprimir el menu  |     |   |  |  |   | x|
+||||||||
+
+## F) Módulos 
+
+Necesita los siguientes módulos:
+
+- pyaudio 0.2.12
+- wave 0.0.2
+- scipy 1.9.1
+- matplotlib 3.5.3
+- numpy 1.22.3
+
+## G) Referencias 
 > Obtener datos de un audio: http://blog.espol.edu.ec/telg1001/audio-en-formato-wav/ 
 
 > Representación en Frecuencia: https://joserzapata.github.io/courses/mineria-audio/representacion_audio/

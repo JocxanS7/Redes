@@ -77,7 +77,7 @@ def grabar2(q1,q2,q3,q4):
 
     #Esta parte fue modificada por Jocxan Sandi 
     #Se utilizan las colas como banderas para comunicar los 3 diferentes procesos
-    estado = "Grabar"
+    estado = "Pausar"
     while True:
         if q2.empty()==False: #Esta es la cola de estado, en caso de que detecte una entrada es que
             #el estado cambió a terminar y terminan todos los procesos
@@ -221,7 +221,11 @@ def grafica_tiempo_real(q1,q2,q3,q4):
         if (q1.empty())== False: #Cuando el proceso 1 envía los datos entra aquí para hacer la representacións
             sonido = q1.get() #obtiene el sonido
             
+            ax.clear()
+            ab.clear()
             ax.cla()
+            gc.collect()
+
             ax.plot(sonido) #hace el plot del dominio en el tiempo
             
             #Este fragmento de código fue obtenido de Joser Zapata 
@@ -237,7 +241,11 @@ def grafica_tiempo_real(q1,q2,q3,q4):
             MagFreq = MagFreq / float(n)
             
             ab.cla() 
+            gc.collect()
             ab.plot(MagFreq) #hace el plot del Espectro de magnitud o Fourier
+
+            del sonido, AudioFreq
+            gc.collect()
             
         fig.canvas.draw()
         fig.canvas.flush_events()
