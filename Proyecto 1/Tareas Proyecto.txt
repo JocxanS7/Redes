@@ -1,0 +1,4 @@
+Tareas: 
+
+Instalar Virtual Box
+Ver que es Docker Compose 
