@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  server:
+      privileged: true      
+      build: 
+        context: ./server
+        dockerfile: dockerfile
+      
+      container_name: server
+      networks:
+        #Ip del router en con LAN1
+        macvlan:
+          #router1 : 10.0.0.99
+          ipv4_address: 10.0.4.99
+
+volumes:
+  config: {}
+
+networks:
+  macvlan:
+    driver: macvlan
+    #driver_opts:
+    #  parent: eth0
+    ipam:
+      config:
+        - subnet: 10.0.4.0/24
+          gateway: 10.0.4.1
+  
+ 

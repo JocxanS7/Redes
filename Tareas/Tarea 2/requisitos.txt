@@ -1,0 +1,5 @@
+apt-get update -y
+apt-get install -y net-tools
+apt install net-tools
+apt install iputils-ping
+apt-get install telnet
