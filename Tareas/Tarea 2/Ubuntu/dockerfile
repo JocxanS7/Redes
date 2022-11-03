@@ -1,8 +1,0 @@
-
-FROM ubuntu:latest
-#FROM kmanna/nat-router
-# Router 1
-RUN apt-get update
-RUN apt install net-tools
-RUN apt install iputils-ping
-RUN apt-get install telnet

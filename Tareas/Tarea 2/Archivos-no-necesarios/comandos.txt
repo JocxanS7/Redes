@@ -1,0 +1,22 @@
+docker build -t cliente-ubuntu .
+docker build -t jocxans7/server-tcp .
+kubectl apply -f server-deployment.yml
+docker build -t server-tcp .
+telnet 127.0.0.1 9666
+docker run -it --rm --name my-running-app my-gcc-app
+netstat -ltpn
+ping 127.0.0.1
+ifconfig 
+
+kubectl describe pod
+kubectl delete calculadora
+kubectl get deploy
+docker exec -it 4bc2114ddb9e  bash
+kubectl get pods -o wide
+docker login
+
+docker image tag cliente-ubuntu jocxans7/ubuntu-cliente
+
+helm package nombre/
+helm repo index .
+helm repo add calculadora-helm .

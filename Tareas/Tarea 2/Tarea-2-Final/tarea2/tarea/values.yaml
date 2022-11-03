@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-
+#appTitle: Calculadora de IPs
 # image:
 #   repository: nginx
 #   pullPolicy: IfNotPresent

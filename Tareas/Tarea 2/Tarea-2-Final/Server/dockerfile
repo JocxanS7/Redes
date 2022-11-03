@@ -4,7 +4,7 @@ WORKDIR /server
 
 COPY server2.c /server
 
-RUN gcc -o myapp server2.c
+RUN gcc -o myapp server2.c -lm -std=gnu99
 CMD ["./myapp"]
 
 #docker build -t server .

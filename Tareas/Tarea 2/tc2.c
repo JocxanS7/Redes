@@ -1,43 +1,65 @@
-#include <conio.h>
+// #include <stdio.h>
+
+
+// int main()
+// {
+//     char buffer[1024];
+//     char str[80] = "This is - www.tutorialspoint.com - website";
+//     const char s[2] = " ";
+//     char *token;
+   
+// //    /* get the first token */
+//     token = strtok(str, s);
+
+//     //char *token = strtok(espacio_cadena, " ");
+//     int n = 1;
+
+//     while( token != NULL ) {
+//         n+=1;
+//         printf( " %s\n", token );
+//         token = strtok(NULL, " ");
+//     }
+
+//     // char *token2 = strtok(espacio_cadena, " ");
+//     // char* argv[n];
+//     // while( token2 != NULL ) {
+//     //     printf( " %s\n", token2 );
+//     //     argv[n] = token2;
+//     //     n+=1;
+//     //     token2 = strtok(NULL, " ");
+//     // }
+    
+    
+//     // printf( "%s", argv[0]);
+
+//     // while( token != NULL ) {
+//     //     printf( " %s\n", token ); //printing each token
+//     //     token = strtok(NULL, " ");
+//     // }
+
+//     // char argv[] = "Hola Mundo";
+//     // printf( "Hola mundo." );
+
+//     // getch(); /* Pausa */
+
+//     return 0;
+// }
+
+
+#include <string.h>
 #include <stdio.h>
 
+int main () {
+   char str2[1024]; 
+   char str[1024] = "x";
+   const char s[2] = " ";
+   char *token;
+   char *token2;
 
-//GET BROADCAST IP 10.8.2.5 MASK /29
-//GET BROADCAST IP 172.16.0.56 MASK 255.255.255.128
-void getBroadcastIp(char ip, char mask){
-
-};
-
-
-//GET NETWORK NUMBER IP 10.8.2.5 MASK /29
-//GET NETWORK NUMBER IP 172.16.0.56 MASK 255.255.255.128
-void getNetworkNumberIp(char ip , char mask){
-    printf("Size of char datatype is: %ld byte\n",sizeof(ip));
-
-};
-
-
-//GET HOSTS RANGE IP 10.8.2.5 MASK /29
-//GET HOSTS RANGE IP 172.16.0.56 MASK 255.255.255.128
-void getHostsRangeIp(char iP , char mask){
-
-
-};
-
-
-//GET RANDOM SUBNETS NETWORK NUMBER 10.0.0.0 MASK /8 NUMBER 3  sIZE /24
-//
-void getRamdonSubNet(char iP , char mask){
-
-
-};
-
-
-int main()
-{
-    printf( "Hola mundo." );
-
-    getch(); /* Pausa */
-
-    return 0;
+   if (strcmp(str,"x")==0){	
+	    printf("Server prueba x: %s\n", str);
+    }
+   
+  
+   return(0);
 }
